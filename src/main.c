@@ -55,7 +55,7 @@ int main(int argc, const char *argv[]) {
     char text[MAX_INPUT_PROG_SIZE];
 
     if (argc < 2) {
-        printf("jit_runner [program.bf]\n");
+        printf("Usage: jit_runner <program.bf>\n");
         exit(EXIT_FAILURE);
     }
 
