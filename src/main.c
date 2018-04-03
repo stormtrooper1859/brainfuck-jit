@@ -8,8 +8,8 @@
 
 
 #define MAX_STACK_SIZE 1024
-char *my_stack[MAX_STACK_SIZE]; //depth of brackets nesting
-int my_stack_index = 0;
+char *stack[MAX_STACK_SIZE]; //depth of brackets nesting
+int stack_index = 0;
 
 #define MAX_INPUT_PROG_SIZE 65536
 
@@ -56,7 +56,7 @@ int main(int argc, const char *argv[]) {
     char text[MAX_INPUT_PROG_SIZE];
 
     if (argc < 2) {
-        printf("Usage: jit_runner <program.bf>\n");
+        printf("Usage: brainfuck_jit <program.bf>\n");
         exit(EXIT_FAILURE);
     }
 
@@ -134,7 +134,7 @@ int main(int argc, const char *argv[]) {
                 prog_ind += sizeof(gtchr);
                 break;
             case '[':
-                my_stack[my_stack_index++] = &addr[prog_ind];
+                stack[stack_index++] = &addr[prog_ind];
                 for (int k = 0; k < sizeof(jmp_code); ++k) {
                     addr[prog_ind + k] = jmp_code[k];
                 }
@@ -142,7 +142,7 @@ int main(int argc, const char *argv[]) {
                 break;
             case ']':
                 cur_to = &addr[prog_ind];
-                tmp_ptr = my_stack[--my_stack_index];
+                tmp_ptr = stack[--stack_index];
                 for (int k = 0; k < sizeof(jne_code); ++k) {
                     addr[prog_ind + k] = jne_code[k];
                 }
