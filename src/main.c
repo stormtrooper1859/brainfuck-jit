@@ -18,11 +18,13 @@ int my_stack_index = 0;
 
 ssize_t read_program(char *start, int fd) {
     ssize_t sz;
-    ssize_t all = 0;
-    while ((sz = read(fd, start, MAX_INPUT_PROG_SIZE)) != 0) {
+    size_t all = 0;
+    while ((sz = read(fd, start, MAX_INPUT_PROG_SIZE - all)) != 0) {
         start += sz;
         all += sz;
     }
+    if(sz == -1) return -1;
+    if(sz != 0) return -2;
     return all;
 }
 
@@ -66,6 +68,14 @@ int main(int argc, const char *argv[]) {
     }
 
     ssize_t sz = read_program(text, fd);
+
+    if(sz == -1){
+        perror("read");
+        exit(EXIT_FAILURE);
+    }else if(sz == -2){
+        printf("Input program too large\n");
+        exit(EXIT_FAILURE);
+    }
 
     close(fd);
 
