@@ -7,14 +7,13 @@
 #include <unistd.h>
 
 
-#define JIT_CODE_MAX_SIZE 204800
-
 #define MAX_STACK_SIZE 1024
 char *my_stack[MAX_STACK_SIZE]; //depth of brackets nesting
 int my_stack_index = 0;
 
-
 #define MAX_INPUT_PROG_SIZE 65536
+
+#define JIT_CODE_MAX_SIZE (MAX_INPUT_PROG_SIZE * 16)
 
 ssize_t read_program(char *start, int fd) {
     ssize_t sz;
@@ -81,7 +80,7 @@ int main(int argc, const char *argv[]) {
 
     char *addr;
     addr = mmap(NULL, JIT_CODE_MAX_SIZE, PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-    if (addr != MAP_FAILED) {
+    if (addr == MAP_FAILED) {
         perror("mmap");
         exit(EXIT_FAILURE);
     }
