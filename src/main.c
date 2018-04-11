@@ -22,8 +22,8 @@ ssize_t read_program(char *start, int fd) {
         start += sz;
         all += sz;
     }
-    if(sz == -1) return -1;
-    if(sz != 0) return -2;
+    if (sz == -1) return -1;
+    if (sz != 0) return -2;
     return all;
 }
 
@@ -68,10 +68,10 @@ int main(int argc, const char *argv[]) {
 
     ssize_t sz = read_program(text, fd);
 
-    if(sz == -1){
+    if (sz == -1) {
         perror("read");
         exit(EXIT_FAILURE);
-    }else if(sz == -2){
+    } else if (sz == -2) {
         printf("Input program too large\n");
         exit(EXIT_FAILURE);
     }
@@ -163,14 +163,7 @@ int main(int argc, const char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    void (*prog)();
-    prog = addr;
-
-    int (*m1p)(int) = putchar;
-    int (*m1g)() = getchar;
-    void *(*mlc)(size_t) = malloc;
-
-    prog(m1p, m1g, mlc);
+    ((void (*)(int (*)(int), int (*)(), void *(*)(size_t))) addr)(putchar, getchar, malloc);
 
     rez = munmap(addr, JIT_CODE_MAX_SIZE);
     if (rez != 0) {
